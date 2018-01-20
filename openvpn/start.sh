@@ -77,4 +77,4 @@ if [ -n "${LOCAL_NETWORK-}" ]; then
     fi
 fi
 
-exec openvpn "${TRANSMISSION_CONTROL_OPTS}" "${OPENVPN_OPTS}" --config "${OPENVPN_CONFIG}"
+exec openvpn ${TRANSMISSION_CONTROL_OPTS} ${OPENVPN_OPTS} --config "${OPENVPN_CONFIG}"
