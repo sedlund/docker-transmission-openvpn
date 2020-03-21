@@ -1,0 +1,24 @@
+FROM alpine:3 as builder
+
+ARG DOCKERIZE_ARCH=amd64
+ARG DOCKERIZE_VERSION=v0.6.0
+
+RUN apk add gcc make libc-dev ruby-dev curl
+RUN gem install --build-root=/build transmission-rss
+RUN mkdir -p /build/usr/local/bin
+RUN curl -L https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-$DOCKERIZE_ARCH-$DOCKERIZE_VERSION.tar.gz | tar -C /build/usr/local/bin -xzv
+
+###
+FROM alpine:3
+MAINTAINER Kristian Haugene
+
+RUN apk add --no-cache ruby ruby-etc ruby-json
+
+COPY --from=builder /build /
+
+ADD . /etc/transmission-rss
+
+ENV TRANSMISSION_DOWNLOAD_DIR=/data/completed \
+    RSS_URL=**None**
+
+CMD ["/etc/transmission-rss/start.sh"]
